@@ -78,7 +78,7 @@ public class EmployeeController {
      */
     @PostMapping
     @ApiOperation(value = "add new employee")
-    public Result save(EmployeeDTO employeeDTO) {
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
         log.info("add new employee: {}", employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success();

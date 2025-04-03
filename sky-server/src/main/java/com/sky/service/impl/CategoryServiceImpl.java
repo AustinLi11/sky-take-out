@@ -38,10 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void save(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
         category.setStatus(StatusConstant.ENABLE);
         categoryMapper.save(category);
     }
@@ -64,18 +60,14 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         Integer count = dishMapper.countByCategoryId(id);
         if (count > 0) {
-            //当前分类下有菜品，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }
 
-        //查询当前分类是否关联了套餐，如果关联了就抛出业务异常
         count = setmealMapper.countByCategoryId(id);
         if (count > 0) {
-            //当前分类下有菜品，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
 
-        //删除分类数据
         categoryMapper.deleteById(id);
     }
 
@@ -83,8 +75,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
         categoryMapper.update(category);
     }
 
@@ -93,8 +83,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
         categoryMapper.update(category);
     }
